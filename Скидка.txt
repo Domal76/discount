@@ -1,29 +1,52 @@
+import java.util.ArrayList;
+
+public class Basket {
+    public int[] decryptData(int discount, int offset,int readLength){
+        Goods goods = new Goods();
+        ArrayList <Integer> priceGoods = goods.getPrice();
+        int[] price = priceGoods.stream().mapToInt(i -> i.intValue()).toArray();
+        int[]priceNew= new int[price.length];
+        if (readLength >priceGoods.size() || (readLength +offset -1) >priceGoods.size()) {
+            System.out.println("Количество товаров в корзине-меньше требуемых для условий скидки, добавьте минимум до: "
+                    +offset+readLength);
+            throw new RuntimeException(
+           "Количество товаров в корзине-меньше требуемых для условий скидки, добавьте до: " +offset+readLength);}
+        if (discount >=1 && discount <=99 && offset >=0 && readLength >0 && price.length >0){
+            for (int i =0 ; i < price.length; i++) {
+                priceNew [i] = price [i];
+                if ( i>=offset-1 && i<readLength){
+                priceNew[i] = (int) Math.floor(price[i] * discount / 100);}
+            }
+        }
+                else {
+                    System.out.println("Данные введены неверно");
+                }
+        return priceNew;
+    }
+}
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Goods {
+    ArrayList<Integer> goods = new ArrayList<>();
+    Scanner scanner = new Scanner(System.in);
+
+    ArrayList<Integer> getPrice () {
+        System.out.println("Введите стоимость товара (нажимая Enter после каждого). Введя последний: нажмите 0");
+        int element = scanner.nextInt();
+        while (!(element ==0)){
+            goods.add(element);
+             element = scanner.nextInt();
+        }
+        return goods;
+    }
+}
 public class Call {
     public static void main(String[] args) {
         Basket basket = new Basket();
-        int [] basketNew= basket.decryptData (new int[]{5, 100, 20, 66, 16}, 50, 1, 3);
+        int [] basketNew= basket.decryptData (50, 1, 3);
        for (int print : basketNew){
            System.out.print(print + " ");
        }
     }
 }
-
-
-public class Basket {
-    public int[] decryptData(int[] price,
-                                    int discount,
-                                    int offset,
-                                    int readLength) {
-
-            int[] priceNew = new int[readLength];
-            for (int i = offset; i < readLength + offset; i++) {
-                if (discount >=1 && discount <=99 && offset >=0 && readLength >0 && price[i] >0){
-                priceNew[i - offset] = price[i] * discount / 100;}
-                else {
-                    System.out.println("Data entered incorrectly");
-                    break;
-                }
-            }
-            return priceNew;
-        }
-    }
